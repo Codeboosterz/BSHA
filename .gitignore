@@ -1,0 +1,15 @@
+# Local Netlify folder
+.netlify
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# pnpm store
+.pnpm-store
+
+# MCP config (local)
+.mcp.json
+
+# Node modules
+node_modules
