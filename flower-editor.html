@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flower Animation Editor — Heavenly Angels BSO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --plum: #6B3D7A;
+      --lilac: #B57EC9;
+      --lavender: #DCC6E6;
+      --cream: #FFF6EC;
+      --misty: #E9E1EC;
+      --dark: #3D2E4A;
+      --light: #6B5B7B;
+      --white: #FFFFFF;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 400vh; /* Long page for scroll testing */
+      position: relative;
+    }
+
+    /* ===== SCROLL MARKERS ===== */
+    .scroll-marker {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 28px;
+      background: var(--misty);
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--plum);
+      border: 1px solid var(--lavender);
+      pointer-events: none;
+      z-index: 5;
+    }
+    .scroll-marker.top    { top: 40px; }
+    .scroll-marker.q1     { top: 25%; }
+    .scroll-marker.mid    { top: 50%; }
+    .scroll-marker.q3     { top: 75%; }
+    .scroll-marker.bottom { bottom: 40px; }
+
+    /* ===== PAGE GUIDE LINES ===== */
+    .guide-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: repeating-linear-gradient(90deg, var(--lavender) 0, var(--lavender) 8px, transparent 8px, transparent 16px);
+      z-index: 1;
+    }
+    .guide-line.q1  { top: 25%; }
+    .guide-line.mid { top: 50%; }
+    .guide-line.q3  { top: 75%; }
+
+    /* ===== SCROLL PROGRESS BAR ===== */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--lilac), var(--plum));
+      z-index: 10000;
+      transition: width 0.05s linear;
+    }
+
+    /* ===== FLOWER (same structure as production) ===== */
+    .scroll-flower {
+      position: fixed;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      will-change: transform, opacity;
+      transform-origin: bottom left;
+    }
+
+    .scroll-flower__float {
+      will-change: transform;
+    }
+
+    .scroll-flower__img {
+      width: clamp(260px, 42vw, 660px);
+      height: auto;
+      display: block;
+      opacity: 0.9;
+      pointer-events: none;
+      filter: drop-shadow(0 8px 24px rgba(107, 61, 122, 0.18));
+    }
+
+    @keyframes flowerFloat {
+      0%   { transform: translateY(0px)  rotate(-1.25deg); }
+      33%  { transform: translateY(-8px) rotate(0.5deg);   }
+      66%  { transform: translateY(-3px) rotate(1.25deg);  }
+      100% { transform: translateY(0px)  rotate(-1.25deg); }
+    }
+
+    .scroll-flower__float.floating {
+      animation: flowerFloat 6s ease-in-out infinite;
+    }
+
+    /* ===== CONTROL PANEL ===== */
+    .editor-panel {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 340px;
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      background: rgba(255, 255, 255, 0.97);
+      backdrop-filter: blur(16px);
+      border-radius: 16px;
+      box-shadow: 0 8px 40px rgba(107, 61, 122, 0.2);
+      border: 1px solid var(--lavender);
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .editor-panel h2 {
+      font-size: 16px;
+      color: var(--plum);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .editor-panel .subtitle {
+      font-size: 11px;
+      color: var(--light);
+      margin-bottom: 16px;
+    }
+
+    .editor-section {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--misty);
+    }
+    .editor-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    .editor-section h3 {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--plum);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .control-row label {
+      font-size: 12px;
+      color: var(--dark);
+      min-width: 80px;
+      font-weight: 500;
+    }
+
+    .control-row input[type="range"] {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--misty);
+      border-radius: 3px;
+      outline: none;
+    }
+    .control-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--lilac);
+      cursor: pointer;
+      border: 2px solid var(--white);
+      box-shadow: 0 2px 6px rgba(107,61,122,0.3);
+    }
+
+    .control-row .value {
+      font-size: 12px;
+      color: var(--lilac);
+      font-weight: 600;
+      min-width: 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .control-row input[type="checkbox"] {
+      accent-color: var(--lilac);
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Export button */
+    .export-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, var(--lilac), var(--plum));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(181,126,201,0.4);
+    }
+
+    /* Export output */
+    .export-output {
+      margin-top: 10px;
+      background: var(--dark);
+      color: #e0d0f0;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 11px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    /* Live info bar */
+    .live-info {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(61, 46, 74, 0.92);
+      color: var(--lavender);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-variant-numeric: tabular-nums;
+      z-index: 9999;
+      backdrop-filter: blur(8px);
+    }
+    .live-info span { color: white; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
+  <!-- Scroll position markers -->
+  <div class="scroll-marker top">↑ TOP — Scroll starts here</div>
+  <div class="guide-line q1"></div>
+  <div class="scroll-marker q1">25% scrolled</div>
+  <div class="guide-line mid"></div>
+  <div class="scroll-marker mid">50% scrolled</div>
+  <div class="guide-line q3"></div>
+  <div class="scroll-marker q3">75% scrolled</div>
+  <div class="scroll-marker bottom">↓ BOTTOM — Scroll ends here</div>
+
+  <!-- Flower element -->
+  <div class="scroll-flower" id="scrollFlower">
+    <div class="scroll-flower__float floating" id="flowerFloat">
+      <img class="scroll-flower__img" id="flowerImg"
+           src="Assets/Flower assets/Full transparent.png"
+           alt="" draggable="false">
+    </div>
+  </div>
+
+  <!-- Control Panel -->
+  <div class="editor-panel" id="editorPanel">
+    <h2>🌸 Flower Editor</h2>
+    <p class="subtitle">Adjust parameters and scroll to preview. Export values when done.</p>
+
+    <!-- Scale -->
+    <div class="editor-section">
+      <h3>📐 Scale</h3>
+      <div class="control-row">
+        <label>Start</label>
+        <input type="range" id="startScale" min="0.01" max="0.30" step="0.01" value="0.08">
+        <span class="value" id="startScaleVal">0.08</span>
+      </div>
+      <div class="control-row">
+        <label>End</label>
+        <input type="range" id="endScale" min="0.10" max="1.00" step="0.01" value="0.45">
+        <span class="value" id="endScaleVal">0.45</span>
+      </div>
+    </div>
+
+    <!-- Opacity -->
+    <div class="editor-section">
+      <h3>👁 Opacity</h3>
+      <div class="control-row">
+        <label>Start</label>
+        <input type="range" id="startOpacity" min="0.05" max="1.00" step="0.05" value="0.50">
+        <span class="value" id="startOpacityVal">0.50</span>
+      </div>
+      <div class="control-row">
+        <label>End</label>
+        <input type="range" id="endOpacity" min="0.10" max="1.00" step="0.05" value="0.95">
+        <span class="value" id="endOpacityVal">0.95</span>
+      </div>
+    </div>
+
+    <!-- Position -->
+    <div class="editor-section">
+      <h3>📍 Position</h3>
+      <div class="control-row">
+        <label>Left</label>
+        <input type="range" id="posLeft" min="-200" max="100" step="5" value="-40">
+        <span class="value" id="posLeftVal">-40px</span>
+      </div>
+      <div class="control-row">
+        <label>Bottom</label>
+        <input type="range" id="posBottom" min="-200" max="100" step="5" value="-60">
+        <span class="value" id="posBottomVal">-60px</span>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div class="editor-section">
+      <h3>📏 Image Width</h3>
+      <div class="control-row">
+        <label>Min</label>
+        <input type="range" id="widthMin" min="100" max="500" step="10" value="260">
+        <span class="value" id="widthMinVal">260px</span>
+      </div>
+      <div class="control-row">
+        <label>Max</label>
+        <input type="range" id="widthMax" min="300" max="900" step="10" value="660">
+        <span class="value" id="widthMaxVal">660px</span>
+      </div>
+    </div>
+
+    <!-- Float Animation -->
+    <div class="editor-section">
+      <h3>🌊 Float Animation</h3>
+      <div class="control-row">
+        <label>Enabled</label>
+        <input type="checkbox" id="floatEnabled" checked>
+      </div>
+      <div class="control-row">
+        <label>Duration</label>
+        <input type="range" id="floatDuration" min="2" max="12" step="0.5" value="6">
+        <span class="value" id="floatDurationVal">6s</span>
+      </div>
+    </div>
+
+    <!-- Z-Index -->
+    <div class="editor-section">
+      <h3>📚 Layer</h3>
+      <div class="control-row">
+        <label>Z-Index</label>
+        <input type="range" id="zIndex" min="1" max="100" step="1" value="10">
+        <span class="value" id="zIndexVal">10</span>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <button class="export-btn" id="exportBtn">📋 Export Config to Clipboard</button>
+    <div class="export-output" id="exportOutput"></div>
+  </div>
+
+  <!-- Live scroll info -->
+  <div class="live-info" id="liveInfo">
+    Scroll: <span id="scrollPct">0%</span> &nbsp;|&nbsp;
+    Scale: <span id="liveScale">0.08</span> &nbsp;|&nbsp;
+    Opacity: <span id="liveOpacity">0.50</span>
+  </div>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <script>
+    (function() {
+      'use strict';
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // DOM refs
+      const flower     = document.getElementById('scrollFlower');
+      const floatEl    = document.getElementById('flowerFloat');
+      const imgEl      = document.getElementById('flowerImg');
+      const progressEl = document.getElementById('scrollProgress');
+
+      // Slider refs
+      const sliders = {
+        startScale:   document.getElementById('startScale'),
+        endScale:     document.getElementById('endScale'),
+        startOpacity: document.getElementById('startOpacity'),
+        endOpacity:   document.getElementById('endOpacity'),
+        posLeft:      document.getElementById('posLeft'),
+        posBottom:    document.getElementById('posBottom'),
+        widthMin:     document.getElementById('widthMin'),
+        widthMax:     document.getElementById('widthMax'),
+        floatEnabled: document.getElementById('floatEnabled'),
+        floatDuration:document.getElementById('floatDuration'),
+        zIndex:       document.getElementById('zIndex')
+      };
+
+      // Value display refs
+      const vals = {
+        startScale:   document.getElementById('startScaleVal'),
+        endScale:     document.getElementById('endScaleVal'),
+        startOpacity: document.getElementById('startOpacityVal'),
+        endOpacity:   document.getElementById('endOpacityVal'),
+        posLeft:      document.getElementById('posLeftVal'),
+        posBottom:    document.getElementById('posBottomVal'),
+        widthMin:     document.getElementById('widthMinVal'),
+        widthMax:     document.getElementById('widthMaxVal'),
+        floatDuration:document.getElementById('floatDurationVal'),
+        zIndex:       document.getElementById('zIndexVal')
+      };
+
+      // Live info
+      const scrollPctEl = document.getElementById('scrollPct');
+      const liveScaleEl = document.getElementById('liveScale');
+      const liveOpEl    = document.getElementById('liveOpacity');
+
+      let scrollTween = null;
+
+      function getConfig() {
+        return {
+          startScale:    parseFloat(sliders.startScale.value),
+          endScale:      parseFloat(sliders.endScale.value),
+          startOpacity:  parseFloat(sliders.startOpacity.value),
+          endOpacity:    parseFloat(sliders.endOpacity.value),
+          posLeft:       parseInt(sliders.posLeft.value),
+          posBottom:     parseInt(sliders.posBottom.value),
+          widthMin:      parseInt(sliders.widthMin.value),
+          widthMax:      parseInt(sliders.widthMax.value),
+          floatEnabled:  sliders.floatEnabled.checked,
+          floatDuration: parseFloat(sliders.floatDuration.value),
+          zIndex:        parseInt(sliders.zIndex.value)
+        };
+      }
+
+      function updateDisplays(cfg) {
+        vals.startScale.textContent   = cfg.startScale.toFixed(2);
+        vals.endScale.textContent     = cfg.endScale.toFixed(2);
+        vals.startOpacity.textContent = cfg.startOpacity.toFixed(2);
+        vals.endOpacity.textContent   = cfg.endOpacity.toFixed(2);
+        vals.posLeft.textContent      = cfg.posLeft + 'px';
+        vals.posBottom.textContent    = cfg.posBottom + 'px';
+        vals.widthMin.textContent     = cfg.widthMin + 'px';
+        vals.widthMax.textContent     = cfg.widthMax + 'px';
+        vals.floatDuration.textContent= cfg.floatDuration + 's';
+        vals.zIndex.textContent       = cfg.zIndex;
+      }
+
+      function applyConfig(cfg) {
+        // Position
+        flower.style.left   = cfg.posLeft + 'px';
+        flower.style.bottom = cfg.posBottom + 'px';
+        flower.style.zIndex = cfg.zIndex;
+
+        // Image width
+        imgEl.style.width = 'clamp(' + cfg.widthMin + 'px, 42vw, ' + cfg.widthMax + 'px)';
+
+        // Float animation
+        if (cfg.floatEnabled) {
+          floatEl.classList.add('floating');
+          floatEl.style.animationDuration = cfg.floatDuration + 's';
+        } else {
+          floatEl.classList.remove('floating');
+        }
+
+        // Kill existing GSAP scroll animation
+        if (scrollTween) {
+          scrollTween.kill();
+          scrollTween = null;
+        }
+        ScrollTrigger.getAll().forEach(t => t.kill());
+
+        // Set initial state
+        gsap.set(flower, {
+          scale: cfg.startScale,
+          opacity: cfg.startOpacity,
+          transformOrigin: 'bottom left'
+        });
+
+        // Scroll-driven growth
+        scrollTween = gsap.to(flower, {
+          scale: cfg.endScale,
+          opacity: cfg.endOpacity,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: document.documentElement,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            invalidateOnRefresh: true,
+            onUpdate: function(self) {
+              const pct = (self.progress * 100).toFixed(0);
+              const curScale = cfg.startScale + (cfg.endScale - cfg.startScale) * self.progress;
+              const curOp = cfg.startOpacity + (cfg.endOpacity - cfg.startOpacity) * self.progress;
+              
+              scrollPctEl.textContent = pct + '%';
+              liveScaleEl.textContent = curScale.toFixed(3);
+              liveOpEl.textContent    = curOp.toFixed(2);
+              progressEl.style.width  = pct + '%';
+            }
+          }
+        });
+
+        updateDisplays(cfg);
+      }
+
+      // Initialize
+      applyConfig(getConfig());
+
+      // Listen to all sliders
+      Object.keys(sliders).forEach(key => {
+        const el = sliders[key];
+        const evt = el.type === 'checkbox' ? 'change' : 'input';
+        el.addEventListener(evt, () => applyConfig(getConfig()));
+      });
+
+      // Export button
+      document.getElementById('exportBtn').addEventListener('click', () => {
+        const cfg = getConfig();
+        const outputEl = document.getElementById('exportOutput');
+        
+        const code = `// === FLOWER CONFIG (paste into scroll-flower.js) ===
+const CONFIG = {
+  startScale: ${cfg.startScale.toFixed(2)},
+  endScale: ${cfg.endScale.toFixed(2)},
+  startOpacity: ${cfg.startOpacity.toFixed(2)},
+  endOpacity: ${cfg.endOpacity.toFixed(2)}
+};
+
+// === CSS OVERRIDES (paste into scroll-flower.css) ===
+.scroll-flower {
+  left: ${cfg.posLeft}px;
+  bottom: ${cfg.posBottom}px;
+  z-index: ${cfg.zIndex};
+}
+.scroll-flower__img {
+  width: clamp(${cfg.widthMin}px, 42vw, ${cfg.widthMax}px);
+}
+.scroll-flower__float {
+  animation-duration: ${cfg.floatDuration}s;
+  /* float enabled: ${cfg.floatEnabled} */
+}`;
+
+        outputEl.textContent = code;
+        outputEl.style.display = 'block';
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(code).then(() => {
+          const btn = document.getElementById('exportBtn');
+          const orig = btn.textContent;
+          btn.textContent = '✅ Copied!';
+          setTimeout(() => btn.textContent = orig, 2000);
+        }).catch(() => {
+          // Clipboard API may fail on file:// — select text instead
+          const range = document.createRange();
+          range.selectNodeContents(outputEl);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(range);
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>
