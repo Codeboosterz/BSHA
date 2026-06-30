@@ -1,0 +1,193 @@
+/* ============================================
+   HEAVENLY ANGELS BSO — Flowerpack Decorations
+   Surgical placement of lilac lily assets
+   ============================================ */
+
+/* --- Base Decoration Layer --- */
+.flower-deco {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 2;
+  will-change: transform;
+}
+
+.flower-deco img {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* === FLOWER-1 — Hero Bottom-Left Cluster ===
+   Large cluster anchored to the hero, peeking from bottom-left */
+.flower-deco--hero-bl {
+  left: -40px;
+  bottom: -30px;
+  width: clamp(140px, 18vw, 260px);
+  opacity: 0.55;
+  transform: rotate(15deg);
+  filter: drop-shadow(0 4px 16px rgba(107, 61, 122, 0.12));
+}
+
+/* === FLOWER-2 — Welkom Top-Right Single Bloom ===
+   Soft accent floating near the content side */
+.flower-deco--welkom-tr {
+  right: -20px;
+  top: -30px;
+  width: clamp(80px, 10vw, 140px);
+  opacity: 0.4;
+  transform: rotate(-20deg);
+  filter: drop-shadow(0 3px 12px rgba(107, 61, 122, 0.10));
+}
+
+/* === FLOWER-3 — Values Left Vertical Stem ===
+   Tall stem running along the left edge */
+.flower-deco--values-l {
+  left: -25px;
+  top: 50%;
+  transform: translateY(-50%) rotate(5deg);
+  width: clamp(70px, 8vw, 120px);
+  opacity: 0.35;
+  filter: drop-shadow(0 3px 12px rgba(107, 61, 122, 0.10));
+}
+
+/* === FLOWER-4 — CTA Bottom-Right Corner ===
+   Corner piece anchoring the CTA gradient */
+.flower-deco--cta-br {
+  right: -20px;
+  bottom: -20px;
+  width: clamp(100px, 12vw, 180px);
+  opacity: 0.3;
+  transform: scaleX(-1) rotate(10deg);
+  filter: drop-shadow(0 4px 16px rgba(255, 255, 255, 0.15));
+}
+
+/* === FLOWER-5 — Scripture Banner Right Accent ===
+   Delicate watercolor bloom beside the quote */
+.flower-deco--scripture-r {
+  right: 2%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(80px, 10vw, 150px);
+  opacity: 0.2;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.12)) brightness(1.2);
+}
+
+/* === FLOWER-6 — Footer Top Garland ===
+   Horizontal arrangement crowning the footer */
+.flower-deco--footer-top {
+  left: 50%;
+  top: -20px;
+  transform: translateX(-50%);
+  width: clamp(200px, 40vw, 500px);
+  opacity: 0.18;
+  filter: drop-shadow(0 2px 12px rgba(255, 255, 255, 0.10)) brightness(1.3);
+}
+
+/* === FLOWER-2 — Gallery Bottom-Left Accent === */
+.flower-deco--gallery-bl {
+  left: -15px;
+  bottom: -20px;
+  width: clamp(70px, 8vw, 120px);
+  opacity: 0.35;
+  transform: rotate(25deg) scaleX(-1);
+  filter: drop-shadow(0 3px 12px rgba(107, 61, 122, 0.10));
+}
+
+/* ============================================
+   WAVE SECTION DIVIDERS
+   ============================================ */
+.wave-divider {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+  line-height: 0;
+  z-index: 1;
+}
+
+.wave-divider svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 2px);
+  height: 100%;
+  margin-left: -1px;
+  will-change: transform;
+}
+
+/* Wave fill colors */
+.wave-fill-white svg path { fill: var(--white); }
+.wave-fill-cream svg path { fill: var(--warm-cream); }
+.wave-fill-lavender svg path { fill: var(--misty-grey); }
+.wave-fill-plum svg path { fill: var(--plum); }
+
+/* Flip for bottom-of-section usage */
+.wave-divider--flip {
+  transform: rotate(180deg);
+}
+
+/* ============================================
+   RESPONSIVE — Mobile: reduce/hide decorations
+   ============================================ */
+@media (max-width: 767px) {
+  .flower-deco--hero-bl {
+    width: clamp(90px, 25vw, 140px);
+    left: -20px;
+    bottom: -15px;
+    opacity: 0.35;
+  }
+  .flower-deco--welkom-tr {
+    display: none;
+  }
+  .flower-deco--values-l {
+    display: none;
+  }
+  .flower-deco--cta-br {
+    width: clamp(60px, 18vw, 100px);
+    opacity: 0.2;
+  }
+  .flower-deco--scripture-r {
+    display: none;
+  }
+  .flower-deco--footer-top {
+    width: clamp(140px, 50vw, 260px);
+    opacity: 0.12;
+  }
+  .flower-deco--gallery-bl {
+    display: none;
+  }
+  .wave-divider {
+    height: 40px;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — Large Desktop: more generous
+   ============================================ */
+@media (min-width: 1440px) {
+  .flower-deco--hero-bl {
+    width: 300px;
+    left: -50px;
+    bottom: -40px;
+  }
+  .flower-deco--footer-top {
+    width: 600px;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+  .flower-deco {
+    will-change: auto;
+  }
+  .wave-divider svg {
+    will-change: auto;
+  }
+}

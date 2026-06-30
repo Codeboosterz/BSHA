@@ -1,0 +1,383 @@
+/* ============================================
+   OVER ONS PAGE — Surgical Enhancement CSS
+   Scoped to .oo-* BEM namespace to avoid
+   collisions with global design-corrections.css
+   ============================================ */
+
+/* ---- Hero eyebrow ---- */
+.oo-hero-eyebrow {
+  display: block;
+  font-family: 'Playfair Display', 'Georgia', serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+  color: var(--ha-purple-500);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Founder section refinement ---- */
+.oo-founder-section {
+  padding-top: clamp(3rem, 5vw, 5rem);
+  padding-bottom: clamp(4rem, 6vw, 6rem);
+}
+
+.oo-founder-section .founder-inner {
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: flex-start;
+}
+
+.oo-founder-section .founder-content h2 {
+  margin-bottom: 0.75rem;
+}
+
+.oo-founder-section .founder-content p {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--ha-muted);
+}
+
+.oo-founder-section .founder-content blockquote {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.125rem;
+  color: var(--ha-purple-600);
+  border-left: 3px solid var(--ha-purple-300);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+  line-height: 1.65;
+}
+
+.oo-founder-section .founder-image {
+  overflow: hidden;
+}
+
+.oo-founder-section .founder-image > img.oo-founder-corner-flower {
+  width: clamp(78px, 7vw, 122px);
+  max-height: none;
+  aspect-ratio: auto;
+  object-fit: contain;
+  right: clamp(12px, 1.4vw, 24px);
+  bottom: clamp(12px, 1.4vw, 24px);
+  left: auto;
+  top: auto;
+  z-index: 4;
+  opacity: 0.42;
+  border-radius: 0;
+  box-shadow: none;
+  transform: rotate(-6deg);
+  filter: drop-shadow(0 10px 18px rgba(93, 44, 115, 0.16));
+  animation: ooFounderFlowerFloat 6s ease-in-out infinite;
+  transform-origin: 58% 74%;
+}
+
+@keyframes ooFounderFlowerFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-6deg) scale(1);
+  }
+  50% {
+    transform: translate3d(-4px, -8px, 0) rotate(-2deg) scale(1.03);
+  }
+}
+
+/* ============================================
+   VALUES GRID — 3×2 Reference Match
+   ============================================ */
+.oo-values-section {
+  padding-top: clamp(3rem, 5vw, 5rem);
+  padding-bottom: clamp(4rem, 6vw, 7rem);
+}
+
+.oo-values-subtitle {
+  font-size: 1rem;
+  color: var(--ha-muted);
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.oo-values-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 3;
+}
+
+/* ---- Single value card ---- */
+.oo-value-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fbf7fd 100%);
+  border: 1px solid rgba(126, 63, 163, 0.1);
+  border-radius: 20px;
+  padding: 2rem 1.75rem;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(93, 44, 115, 0.06);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease;
+}
+
+.oo-value-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 44px rgba(93, 44, 115, 0.13);
+}
+
+/* ---- Icon badge — thin-line elegant circle ---- */
+.oo-value-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  background: linear-gradient(180deg, var(--ha-lavender-100), var(--ha-lavender-200));
+  border: 1px solid rgba(126, 63, 163, 0.12);
+  box-shadow: 0 6px 18px rgba(93, 44, 115, 0.08),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  color: var(--ha-purple-600);
+  transition: all 0.3s ease;
+}
+
+.oo-value-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: all 0.3s ease;
+}
+
+.oo-value-card:hover .oo-value-icon {
+  background: linear-gradient(135deg, var(--ha-purple-500), var(--ha-purple-600));
+  color: #ffffff;
+  border-color: transparent;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 24px rgba(110, 58, 138, 0.22);
+}
+
+/* ---- Card text ---- */
+.oo-value-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--ha-plum);
+  margin-bottom: 0.5rem;
+}
+
+.oo-value-card p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ha-muted);
+  margin: 0;
+}
+
+/* ============================================
+   SCRIPTURE QUOTE SECTION
+   Deep purple with floral accent
+   ============================================ */
+.oo-quote-section {
+  background: linear-gradient(180deg, var(--ha-purple-700) 0%, var(--ha-purple-600) 50%, var(--ha-purple-700) 100%);
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.oo-quote-inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+}
+
+.oo-quote-content {
+  max-width: 760px;
+  position: relative;
+  z-index: 3;
+}
+
+.oo-quote-mark {
+  color: rgba(255, 255, 255, 0.18);
+  width: 48px;
+  height: 48px;
+  margin-bottom: 1rem;
+}
+
+.oo-quote-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  color: #ffffff;
+  line-height: 1.7;
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.oo-quote-ref {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.04em;
+}
+
+.oo-quote-text.typewriter-text::after {
+  height: 0.86em;
+  opacity: 0.62;
+}
+
+/* ---- CTA section override for lavender variant ---- */
+.oo-cta-section {
+  padding: clamp(3rem, 5vw, 5rem) 0;
+  text-align: center;
+}
+
+.oo-cta-section .section-script-title {
+  color: var(--ha-purple-500);
+}
+
+.oo-cta-section h2 {
+  color: var(--ha-purple-800) !important;
+  margin-bottom: 0.75rem;
+}
+
+.oo-cta-section p {
+  color: var(--ha-muted) !important;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+}
+
+/* ============================================
+   RESPONSIVE — Tablet (768px+)
+   ============================================ */
+@media (min-width: 768px) {
+  .oo-values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem;
+  }
+
+  .oo-quote-inner {
+    gap: 3rem;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — Desktop (1024px+)
+   ============================================ */
+@media (min-width: 1024px) {
+  .oo-values-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .oo-value-card {
+    padding: 2.25rem 2rem;
+  }
+
+}
+
+/* ============================================
+   RESPONSIVE — Large Desktop (1440px+)
+   ============================================ */
+@media (min-width: 1440px) {
+  .oo-values-grid {
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
+  }
+
+  .oo-value-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .oo-value-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .oo-value-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ============================================
+   MOBILE (<768px)
+   ============================================ */
+@media (max-width: 767px) {
+  .oo-values-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .oo-value-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .oo-value-icon {
+    width: 52px;
+    height: 52px;
+    margin-bottom: 0.75rem;
+  }
+
+  .oo-value-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .oo-value-card h3 {
+    font-size: 1rem;
+  }
+
+  .oo-value-card p {
+    font-size: 0.8125rem;
+  }
+
+  /* Quote section stacks vertically */
+  .oo-quote-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .oo-quote-mark {
+    margin: 0 auto 0.75rem;
+  }
+
+  .oo-quote-text {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   STAGGER ANIMATION (UI PRO MAX §7)
+   30-50ms per card for grid entrance
+   ============================================ */
+.oo-value-card.fade-in {
+  transition-delay: 0ms;
+}
+
+.oo-value-card:nth-child(1).fade-in { transition-delay: 0ms; }
+.oo-value-card:nth-child(2).fade-in { transition-delay: 50ms; }
+.oo-value-card:nth-child(3).fade-in { transition-delay: 100ms; }
+.oo-value-card:nth-child(4).fade-in { transition-delay: 150ms; }
+.oo-value-card:nth-child(5).fade-in { transition-delay: 200ms; }
+.oo-value-card:nth-child(6).fade-in { transition-delay: 250ms; }
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .oo-value-card {
+    transition: none !important;
+  }
+  .oo-value-card:hover {
+    transform: none;
+  }
+
+  .oo-founder-section .founder-image > img.oo-founder-corner-flower {
+    animation: none;
+  }
+}

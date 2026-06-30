@@ -1,0 +1,32 @@
+/* ============================================
+   HEAVENLY ANGELS BSO — Scroll-Driven Hero Canvas
+   Frame animation inside .hero-image-wrapper,
+   driven by normal page scroll with GSAP pin.
+   ============================================ */
+
+/* ---- Canvas fills the hero-image-wrapper ---- */
+#hero-frame-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1280 / 720;
+  border-radius: inherit;
+  background: #f8f0fc;
+}
+
+/* ---- Hero overflow during GSAP pin ---- */
+/* Change from hidden to clip so decorations are clipped
+   but the wave divider (positioned at bottom) can extend
+   below the hero boundary. clip respects overflow on
+   each axis when combined with clip-path. */
+.hero {
+  overflow: clip !important;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+}
+
+/* ---- GSAP Pin Spacer ---- */
+.pin-spacer {
+  background: var(--warm-cream, #faf7f2) !important;
+  overflow: visible !important;
+}
