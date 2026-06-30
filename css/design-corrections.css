@@ -50,6 +50,18 @@
   --card-shadow-hover: rgba(93, 44, 115, 0.14);
 }
 
+.bitcare-form-wrapper iframe {
+  height: 2500px !important;
+  min-height: 2500px !important;
+}
+
+@media (max-width: 768px) {
+  .bitcare-form-wrapper iframe {
+    height: 2700px !important;
+    min-height: 2700px !important;
+  }
+}
+
 /* Body: bright white base, not cream-dominant */
 body {
   background-color: var(--ha-white);
